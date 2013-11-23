@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "ncurses.h"
 #include "person.h"
+#include "board.h"
 #include <ctime>
 
 void print_time( time_t start, time_t now){
@@ -20,6 +21,7 @@ int main()
   
   int in_ch; 
   Person Player;
+  Board mBoard;
   time_t start; time( &start);
   time_t now; time( &now);
   double seconds;
@@ -40,6 +42,7 @@ int main()
     }
     print_time( start, now);
     print_health( Player);
+    mBoard.print_board( 3);
     refresh();
   }while( (char)in_ch != 'q');
 
