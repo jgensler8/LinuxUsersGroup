@@ -1,0 +1,13 @@
+CC=g++
+
+board.o_: board.h board.cpp
+	$(CC) -c board.cpp -o board.o
+
+tile.o_: tile.h tile.cpp
+	$(CC) -c tile.cpp -o tile.o
+
+person.o_: person.h person.cpp
+	$(CC) -c person.cpp -o person.o
+
+build: person.o_ board.o_ tile.o_ main.cpp
+	$(CC) main.cpp person.o board.o tile.o -lcurses
