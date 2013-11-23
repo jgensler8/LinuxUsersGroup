@@ -1,21 +1,7 @@
-#include <cstdlib>
-#include "ncurses.h"
+#include "tile.h"
+
 #define TILE_BASE_SIZE 10
 #define WALL 'X'
-
-class Tile{
-  public:
-    Tile();
-    Tile( int);
-    int get_width();
-    int get_height();
-    void print_tile(int, int);
-    void layout_init(int, int, int);
-  private:
-    int sizeX;
-    int sizeY;
-    char** layout;
-};
 
 Tile::Tile(){
   sizeX = TILE_BASE_SIZE;

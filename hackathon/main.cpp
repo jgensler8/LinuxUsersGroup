@@ -29,16 +29,16 @@ int main()
   do{
     in_ch = getch();
     if( in_ch == KEY_LEFT){
-      Person.move( -1, 0, mBoard);
+      Player.move( -1, 0, mBoard);
     }
     else if( in_ch == KEY_RIGHT){
-      Person.move( 1, 0, mBoard);
+      Player.move( 1, 0, mBoard);
     }
     else if( in_ch == KEY_UP){
-      Person.move( 0, 1, mBoard);
+      Player.move( 0, 1, mBoard);
     }
     else if( in_ch == KEY_DOWN){
-      Person.move( 0, -1, mBoard);
+      Player.move( 0, -1, mBoard);
     }
     print_time( start, now);
     print_health( Player);

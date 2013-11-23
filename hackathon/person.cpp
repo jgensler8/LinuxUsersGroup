@@ -1,23 +1,8 @@
-#include <cstdlib>
-#include <cstring>
-#include "board.h"
+#include "person.h"
+
 #define BASE_HEALTH 1000
 #define NAME_LEN 100
 #define ENTITY_SYMBOL '&'
-
-class Person{
-  public:
-    Person();
-    Person(char*);
-    int get_health();
-    void move(int, int, Board);
-  private:
-    int locX;
-    int locY;
-    int health;
-    char* name;
-    int entit;  
-};
 
 Person::Person(){
   health = BASE_HEALTH;

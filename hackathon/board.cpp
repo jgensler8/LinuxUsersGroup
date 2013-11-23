@@ -1,21 +1,6 @@
-#include <cstdlib>
-#include "ncurses.h"
-#include "tile.h"
-#define BOARD_BASE_SIZE 5
+#include "board.h"
 
-class Board{
-  public:
-    Board();
-    Board( int);
-    void print_board( int);
-    int is_collision( int, int);
-  private:
-    int sizeX;
-    int sizeY;
-    int tileX;
-    int tileY;
-    Tile** layout;
-};
+#define BOARD_BASE_SIZE 5
 
 Board::Board(){
   sizeX = BOARD_BASE_SIZE;
@@ -50,4 +35,8 @@ void Board::print_board( int farDown){
       layout[i][j].print_tile( farDown+i*tileX, j*tileY);
 }
 
-
+int Board::is_collision( int x, int y){
+  if( x > tileX*BOARD_BASE_SIZE-1 || x < 1) return 0;
+  else if( y > tileY*BOARD_BASE_SIZE-1 || y < 1) return 0;
+  else return 1;
+}
