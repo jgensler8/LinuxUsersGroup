@@ -7,14 +7,13 @@
 class Board{
    public:
     Board();
-    Board( int);
     void print_board( int);
     int is_collision( int, int);
   private:
-    int tileX;
-    int tileY;
-    int sizeX;
-    int sizeY;
+    int tileX; // size of tile in X direction
+    int tileY; // size of tile in Y direction
+    int sizeX; // # of tiles in X direction (width)
+    int sizeY; // # of tiles in Y direction (height)
     Tile** layout;
 };
 #endif

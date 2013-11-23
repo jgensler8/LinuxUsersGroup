@@ -26,11 +26,13 @@ int Person::get_health(){
   return health;
 }
 
-void Person::move( int x, int y, Board board){
-  if( !board.is_collision( locX+x, locY+y) ){
+void Person::move( int y, int x, Board board){
+  if( !board.is_collision( locY+y, locX+x) ){
     locX += x;
     locY += y;
   }
-  
+}
 
+void Person::print_person( int farDown){
+  mvprintw( farDown+locY, locX, "%c", entit);
 }

@@ -1,4 +1,5 @@
 #include "board.h"
+#include "ncurses.h"
 #include <cstdlib>
 #include <cstring>
 
@@ -10,6 +11,7 @@ class Person{
     Person(char*);
     int get_health();
     void move(int, int, Board);
+    void print_person( int);
   private:
     int locX;
     int locY;

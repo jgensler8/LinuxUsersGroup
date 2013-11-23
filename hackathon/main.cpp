@@ -4,6 +4,8 @@
 #include "board.h"
 #include <ctime>
 
+#define FAR_DOWN 3
+
 void print_time( time_t start, time_t now){
   time( &now);
   mvprintw(1,0,"%f", difftime( now, start) );
@@ -29,20 +31,21 @@ int main()
   do{
     in_ch = getch();
     if( in_ch == KEY_LEFT){
-      Player.move( -1, 0, mBoard);
+      Player.move( 0, -1, mBoard);
     }
     else if( in_ch == KEY_RIGHT){
-      Player.move( 1, 0, mBoard);
-    }
-    else if( in_ch == KEY_UP){
       Player.move( 0, 1, mBoard);
     }
+    else if( in_ch == KEY_UP){ //axis increases goin down
+      Player.move( -1, 0, mBoard);
+    }
     else if( in_ch == KEY_DOWN){
-      Player.move( 0, -1, mBoard);
+      Player.move( 1, 0, mBoard);
     }
     print_time( start, now);
     print_health( Player);
-    mBoard.print_board( 3);
+    mBoard.print_board( FAR_DOWN);
+    Player.print_person( FAR_DOWN);
     refresh();
   }while( (char)in_ch != 'q');
 

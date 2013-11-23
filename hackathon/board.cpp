@@ -14,29 +14,27 @@ Board::Board(){
 
   for( int i=0; i<BOARD_BASE_SIZE; ++i)
     for( int j=0; j<BOARD_BASE_SIZE; ++j)
-      layout[i][j].layout_init( i, j, BOARD_BASE_SIZE-1);
-}
-
-Board::Board( int size){
-  sizeX = size;
-  sizeY = size;
-  layout = new Tile*[BOARD_BASE_SIZE];
-  for( int i=0; i<BOARD_BASE_SIZE; ++i)
-    layout[i] = new Tile;
-
-  for( int i=0; i<BOARD_BASE_SIZE; ++i)
-    for( int j=0; j<BOARD_BASE_SIZE; ++j)
-      layout[i][j].layout_init( i, j, BOARD_BASE_SIZE-1);
+      layout[j][i].layout_init( j, i, BOARD_BASE_SIZE);
 }
 
 void Board::print_board( int farDown){
   for( int i=0; i<sizeX; ++i) // i tiles wide
     for( int j=0; j<sizeY; ++j) // j tiles tall
-      layout[i][j].print_tile( farDown+i*tileX, j*tileY);
+      layout[i][j].print_tile( farDown+j*tileY, i*tileX);
 }
 
-int Board::is_collision( int x, int y){
-  if( x > tileX*BOARD_BASE_SIZE-1 || x < 1) return 0;
-  else if( y > tileY*BOARD_BASE_SIZE-1 || y < 1) return 0;
-  else return 1;
+int collision_helper( int totalDist, int tileLen){
+  int k = 1;
+  while( tileLen*k < totalDist) ++k;
+  return k-1; //finds the actual tile
+}
+int Board::is_collision( int y, int x){
+  int squareI = x%tileX;
+  int squareJ = y%tileX;
+  int tileI = collision_helper( x, tileX);
+  int tileJ = collision_helper( y, tileY);
+
+  mvprintw( 60, 0, "sqi%d sqj%d ti%d tj%d", squareJ, squareI, tileJ, tileI);
+
+  return layout[tileI][tileJ].is_collision(squareJ, squareI);
 }

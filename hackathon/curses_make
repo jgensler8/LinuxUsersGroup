@@ -3,9 +3,6 @@ CC=g++
 board.o_: board.h board.cpp
 	$(CC) -c board.cpp -o board.o
 
-tile.o_: tile.h tile.cpp
-	$(CC) -c tile.cpp -o tile.o
-
 person.o_: person.h person.cpp
 	$(CC) -c person.cpp -o person.o
 
