@@ -1,7 +1,9 @@
 BOMBER GAME
 
+arrow keys to move (you have to plant a bomb to initially move)
 'a' to drop bomb
 'q' to quit
 
 -- timer works but does not quit after 30+ seconds
+-- the bombs don't work( or spawn) as planned
 
