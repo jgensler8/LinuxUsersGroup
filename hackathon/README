@@ -1,0 +1,7 @@
+BOMBER GAME
+
+'a' to drop bomb
+'q' to quit
+
+-- timer works but does not quit after 30+ seconds
+
