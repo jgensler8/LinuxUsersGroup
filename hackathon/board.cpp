@@ -1,40 +1,96 @@
 #include "board.h"
 
-#define BOARD_BASE_SIZE 5
+#define BASE_SIZE 60
+#define WALL 'X'
+#define GROUND '%'
+#define BOMB 'B'
+#define NUM_BOMBS 40
 
 Board::Board(){
-  sizeX = BOARD_BASE_SIZE;
-  sizeY = BOARD_BASE_SIZE;
-  layout = new Tile*[BOARD_BASE_SIZE];
-  for( int i=0; i<BOARD_BASE_SIZE; ++i)
-    layout[i] = new Tile[BOARD_BASE_SIZE];
+  layout = new char*[BASE_SIZE];
+  for( int i=0; i<BASE_SIZE; ++i)
+    layout[i] = new char[BASE_SIZE];
   
-  tileX = layout[0][0].get_width();
-  tileY = layout[0][0].get_height();
+  for( int i=0; i<BASE_SIZE; ++i)
+    for( int j=0; j<BASE_SIZE; ++j){
+      if( j==0){
+        attrset( COLOR_PAIR(1) );
+        layout[j][i] = WALL;
+        attrset( A_NORMAL );
+      }
+      else if( j==BASE_SIZE-1) layout[j][i] = WALL;
+      else if( i==0){
+        attron(COLOR_PAIR(2)); 
+        layout[j][i] = WALL;
+        attrset( A_NORMAL );
+      }
+      else if( i==BASE_SIZE-1) layout[j][i] = WALL;
+      else layout[i][j] = GROUND;
+    }
+  
+  for( int i=0; i<NUM_BOMBS; ++i){
+    srand(time(NULL));
+    int randx = rand()%BASE_SIZE;
+    int randy = rand()%BASE_SIZE;
+    layout[randy][randx] = BOMB;
+  }
 
-  for( int i=0; i<BOARD_BASE_SIZE; ++i)
-    for( int j=0; j<BOARD_BASE_SIZE; ++j)
-      layout[j][i].layout_init( j, i, BOARD_BASE_SIZE);
 }
 
-void Board::print_board( int farDown){
-  for( int i=0; i<sizeX; ++i) // i tiles wide
-    for( int j=0; j<sizeY; ++j) // j tiles tall
-      layout[i][j].print_tile( farDown+j*tileY, i*tileX);
+void Board::print_board(){
+  for( int i=0; i<BASE_SIZE; ++i) // i tiles wide
+    for( int j=0; j<BASE_SIZE; ++j) // j tiles tall
+      mvprintw( j, i, "%c", layout[j][i] );
 }
 
-int collision_helper( int totalDist, int tileLen){
-  int k = 1;
-  while( tileLen*k < totalDist) ++k;
-  return k-1; //finds the actual tile
-}
 int Board::is_collision( int y, int x){
-  int squareI = x%tileX;
-  int squareJ = y%tileX;
-  int tileI = collision_helper( x, tileX);
-  int tileJ = collision_helper( y, tileY);
+  if( y <= 0 || y >= BASE_SIZE - 1) return 1;
+  else if ( x <= 0 || x >= BASE_SIZE -1) return 1;
+  else return 0;
+}
 
-  mvprintw( 60, 0, "sqi%d sqj%d ti%d tj%d", squareJ, squareI, tileJ, tileI);
+int Board::not_terrain(int y, int x){
+  if( y <= 0 && y >= BASE_SIZE - 1 && x <= 0 && x >= BASE_SIZE -1)
+    return ( layout[y][x] != GROUND && layout[y][x] != BOMB) ? 1 : 0;
+  return 0;
+}
 
-  return layout[tileI][tileJ].is_collision(squareJ, squareI);
+void Board::set_layout(int y, int x, char c){
+  layout[y][x] = c;
+}
+
+int Board::is_bomb( int y, int x){
+  return !is_collision( y,x) && layout[y][x] == BOMB;
+}
+
+void Board::detonate_bomb( int y, int x, char c){
+  layout[y][x] = c;
+  int bombSize = rand()%30 +10;
+  for( int i=-bombSize; i<bombSize; ++i){
+    if( !is_collision( y+i, x) ) set_layout( y+i, x, '_');
+    if( !is_collision( y, x+i) ) set_layout( y, x+i, '_');
+    if( is_bomb( y+i, x) ) detonate_bomb( y+i, x, '_');
+    if( is_bomb( y, x+i) ) detonate_bomb( y, x+i, '_');
+    
+  } 
+  for( int i=-bombSize/2; i<bombSize/2; ++i){
+    if( !is_collision( y+i, x+i) ) set_layout( y+i, x+i, '_');
+    if( !is_collision( y-i, x-i) ) set_layout( y-i, x-i, '_');
+    if( is_bomb( y+i, x+i) ) detonate_bomb( y+i, x, '_');
+    if( is_bomb( y-i, x-i) ) detonate_bomb( y, x+i, '_');
+  } 
+  for( int i=-bombSize/2; i<bombSize/2; ++i){
+    if( !is_collision( y-i, x-i) ) set_layout( y-i, x-i, '_');
+    if( !is_collision( y+i, x+i) ) set_layout( y+i, x+i, '_');
+    if( is_bomb( y-i, x-i) ) detonate_bomb( y+i, x, '_');
+    if( is_bomb( y+i, x+i) ) detonate_bomb( y, x+i, '_');
+  } 
+}
+
+int Board::count_destroyed(){
+  int total = 0;
+  for( int i=0; i<BASE_SIZE; ++i)
+    for( int j=0; j<BASE_SIZE; ++j)
+      if( layout[j][i] == '_' ) ++total;
+  return total;
 }

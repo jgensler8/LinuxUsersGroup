@@ -1,19 +1,20 @@
-#include "tile.h"
 #include "ncurses.h"
 #include <cstdlib>
+#include "time.h"
 
 #ifndef BOARD_H
 #define BOARD_H
 class Board{
-   public:
+  public:
     Board();
-    void print_board( int);
+    void print_board();
     int is_collision( int, int);
+    int not_terrain( int, int);
+    void set_layout( int, int, char);
+    int is_bomb( int, int);
+    void detonate_bomb( int, int, char);
+    int count_destroyed();
   private:
-    int tileX; // size of tile in X direction
-    int tileY; // size of tile in Y direction
-    int sizeX; // # of tiles in X direction (width)
-    int sizeY; // # of tiles in Y direction (height)
-    Tile** layout;
+    char** layout;
 };
 #endif

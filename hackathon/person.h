@@ -9,9 +9,11 @@ class Person{
   public:
     Person();
     Person(char*);
-    int get_health();
     void move(int, int, Board);
-    void print_person( int);
+    void print_person();
+    void activateBomb( Board);
+    void print_health();
+    int is_alive();
   private:
     int locX;
     int locY;
