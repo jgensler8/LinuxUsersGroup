@@ -1,58 +1,56 @@
 #include "board.h"
 
-#define BASE_SIZE 60
 #define WALL 'X'
 #define GROUND '%'
 #define BOMB 'B'
 #define NUM_BOMBS 40
 
-Board::Board(){
-  layout = new char*[BASE_SIZE];
-  for( int i=0; i<BASE_SIZE; ++i)
-    layout[i] = new char[BASE_SIZE];
+Board::Board( int future_base_size){
+  base_size = future_base_size;
+  layout = new char*[base_size];
+  for( int i=0; i<base_size; ++i)
+    layout[i] = new char[base_size];
   
-  for( int i=0; i<BASE_SIZE; ++i)
-    for( int j=0; j<BASE_SIZE; ++j){
+  for( int i=0; i<base_size; ++i)
+    for( int j=0; j<base_size; ++j){
       if( j==0){
         attrset( COLOR_PAIR(1) );
         layout[j][i] = WALL;
         attrset( A_NORMAL );
       }
-      else if( j==BASE_SIZE-1) layout[j][i] = WALL;
+      else if( j==base_size-1) layout[j][i] = WALL;
       else if( i==0){
         attron(COLOR_PAIR(2)); 
         layout[j][i] = WALL;
         attrset( A_NORMAL );
       }
-      else if( i==BASE_SIZE-1) layout[j][i] = WALL;
+      else if( i==base_size-1) layout[j][i] = WALL;
       else layout[i][j] = GROUND;
     }
   
   for( int i=0; i<NUM_BOMBS; ++i){
     srand(time(NULL));
-    int randx = rand()%BASE_SIZE;
-    int randy = rand()%BASE_SIZE;
+    int randx = rand()%base_size;
+    int randy = rand()%base_size;
     layout[randy][randx] = BOMB;
   }
 
 }
 
 void Board::print_board(){
-  for( int i=0; i<BASE_SIZE; ++i) // i tiles wide
-    for( int j=0; j<BASE_SIZE; ++j) // j tiles tall
+  for( int i=0; i<base_size; ++i) // i tiles wide
+    for( int j=0; j<base_size; ++j) // j tiles tall
       mvprintw( j, i, "%c", layout[j][i] );
 }
 
 int Board::is_collision( int y, int x){
-  if( y <= 0 || y >= BASE_SIZE - 1) return 1;
-  else if ( x <= 0 || x >= BASE_SIZE -1) return 1;
+  if( y <= 0 || y >= base_size - 1) return 1;
+  else if ( x <= 0 || x >= base_size -1) return 1;
   else return 0;
 }
 
 int Board::not_terrain(int y, int x){
-  if( y <= 0 && y >= BASE_SIZE - 1 && x <= 0 && x >= BASE_SIZE -1)
-    return ( layout[y][x] != GROUND && layout[y][x] != BOMB) ? 1 : 0;
-  return 0;
+  return ( layout[y][x] != GROUND && layout[y][x] != BOMB) ? 1 : 0;
 }
 
 void Board::set_layout(int y, int x, char c){
@@ -89,8 +87,8 @@ void Board::detonate_bomb( int y, int x, char c){
 
 int Board::count_destroyed(){
   int total = 0;
-  for( int i=0; i<BASE_SIZE; ++i)
-    for( int j=0; j<BASE_SIZE; ++j)
+  for( int i=0; i<base_size; ++i)
+    for( int j=0; j<base_size; ++j)
       if( layout[j][i] == '_' ) ++total;
   return total;
 }

@@ -6,7 +6,7 @@
 #define BOARD_H
 class Board{
   public:
-    Board();
+    Board( int);
     void print_board();
     int is_collision( int, int);
     int not_terrain( int, int);
@@ -16,5 +16,6 @@ class Board{
     int count_destroyed();
   private:
     char** layout;
+    int base_size;
 };
 #endif
