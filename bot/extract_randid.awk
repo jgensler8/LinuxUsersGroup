@@ -1,8 +1,9 @@
 #!/bin/awk
 {
-  for( i=0; i<NR; ++i){
-    if( 0 != find( $i, "shard2") ){
-      #echo the randid into a file
-    }
+  randid_file="randid"
+  if( /shard2/ ){
+    #echo the randid into a file
+    sub(/randid=/, "", $0);
+    system("echo "$0" > "randid_file" ");
   }
 }
